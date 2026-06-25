@@ -3,11 +3,14 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
+import { connectDB } from "./config/db"
+import authRoutes from "./routes/auth.routes"
 
 dotenv.config();
 
 const app: Application = express();
-
 const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
@@ -21,6 +24,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
@@ -39,16 +43,30 @@ app.get("/api/v1/health", (req: Request, res: Response) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`
+app.use("/api/v1/auth", authRoutes)
+
+app.use((req: Request, res: Response) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found"
+    })
+})
+
+async function startServer() {
+    await connectDB()
+
+    app.listen(PORT, () => {
+        console.log(`
     ================================
-    🚀 Server is running!
+    🚀 NeuralDesk API
     ================================
     Local:   http://localhost:${PORT}
     Health:  http://localhost:${PORT}/api/v1/health
+    Auth:    http://localhost:${PORT}/api/v1/auth
     Mode:    ${process.env.NODE_ENV || "development"}
     ================================
-    `);
-});
+        `)
+    })
+}
 
 export default app;
