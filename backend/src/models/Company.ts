@@ -60,7 +60,4 @@ const CompanySchema = new Schema<ICompany>(
   },
 );
 
-CompanySchema.index({ email: 1 });
-CompanySchema.index({ apiKey: 1 });
-
 export const Company = mongoose.model<ICompany>("Company", CompanySchema);

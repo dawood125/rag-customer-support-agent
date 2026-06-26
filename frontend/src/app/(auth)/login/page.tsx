@@ -7,6 +7,8 @@ import { motion } from "framer-motion"
 import { ArrowRight, Loader2, Sparkles } from "lucide-react"
 import { apiUrl, getErrorMessage } from "@/lib/utils"
 
+import { authApi } from "@/lib/api"
+
 export default function LoginPage() {
     const router = useRouter()
     const [formData, setFormData] = useState({ email: "", password: "" })
@@ -30,20 +32,13 @@ export default function LoginPage() {
         }
 
         try {
-            const res = await fetch(apiUrl("/api/v1/auth/login"), {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(formData)
+            const response = await authApi.login({
+                email: formData.email,
+                password: formData.password
             })
-            const data = await res.json()
-            if (!res.ok) {
-                setError(data.message || "Login failed")
-                return
-            }
             router.push("/dashboard")
-        } catch (err) {
-            setError(getErrorMessage(err))
+        } catch (err: any) {
+            setError(err.message || "Login failed")
         } finally {
             setIsLoading(false)
         }
