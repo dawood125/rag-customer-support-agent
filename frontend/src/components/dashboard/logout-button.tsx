@@ -1,24 +1,29 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { LogOut, Loader2 } from "lucide-react"
-import { authApi } from "@/lib/api"
+import { useAuthStore } from "@/store/auth-store"
+import { useUIStore } from "@/store/ui-store"
 
 export function LogoutButton() {
     const router = useRouter()
-    const [isLoading, setIsLoading] = useState(false)
+    const logout = useAuthStore((state) => state.logout)
+    const isLoading = useAuthStore((state) => state.isLoading)
+    const addToast = useUIStore((state) => state.addToast)
 
     async function handleLogout() {
-        setIsLoading(true)
         try {
-            await authApi.logout()
+            await logout()
+
+            addToast({
+                type: "success",
+                title: "Logged out",
+                description: "You've been logged out successfully."
+            })
+
             router.push("/login")
-            router.refresh()  
         } catch (err) {
             console.error("Logout failed:", err)
-        } finally {
-            setIsLoading(false)
         }
     }
 

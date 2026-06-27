@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google"
 import "../styles/globals.css"
+import { ToastContainer } from "@/components/ui/toast-container"
 
 const geist = Geist({
     subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
             >
                 <div className="grain" />
                 {children}
+                <ToastContainer />
             </body>
         </html>
     )

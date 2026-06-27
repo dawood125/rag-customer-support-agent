@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2, Check } from "lucide-react";
 import { authApi } from "@/lib/api";
-
-import { apiUrl, getErrorMessage } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
+import { useUIStore } from "@/store/ui-store";
 import { cn } from "@/lib/cn";
 
 interface RegisterForm {
@@ -24,6 +24,10 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function RegisterPage() {
   const router = useRouter();
 
+  const register = useAuthStore((state) => state.register);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const addToast = useUIStore((state) => state.addToast);
+
   const [formData, setFormData] = useState<RegisterForm>({
     companyName: "",
     name: "",
@@ -32,7 +36,6 @@ export default function RegisterPage() {
     confirmPassword: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -70,22 +73,25 @@ export default function RegisterPage() {
       return;
     }
 
-    setIsLoading(true);
     setError("");
 
     try {
-      await authApi.register({
+      await register({
         companyName: formData.companyName,
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
 
-      router.push("/login?registered=true");
+      addToast({
+        type: "success",
+        title: "Account created!",
+        description: "Welcome to NeuralDesk.",
+      });
+
+      router.push("/dashboard")
     } catch (err: any) {
       setError(err.message || "Registration failed");
-    } finally {
-      setIsLoading(false);
     }
   }
 
