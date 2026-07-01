@@ -5,8 +5,9 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-import { connectDB } from "./config/db"
-import authRoutes from "./routes/auth.routes"
+import { connectDB } from "./config/db";
+import authRoutes from "./routes/auth.routes";
+import documentRoutes from "./routes/document.routes";
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
@@ -43,20 +44,21 @@ app.get("/api/v1/health", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/documents", documentRoutes);
 
 app.use((req: Request, res: Response) => {
-    res.status(404).json({
-        success: false,
-        message: "Route not found"
-    })
-})
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
 
 async function startServer() {
-    await connectDB()
+  await connectDB();
 
-    app.listen(PORT, () => {
-        console.log(`
+  app.listen(PORT, () => {
+    console.log(`
     ================================
     🚀 NeuralDesk API
     ================================
@@ -65,13 +67,13 @@ async function startServer() {
     Auth:    http://localhost:${PORT}/api/v1/auth
     Mode:    ${process.env.NODE_ENV || "development"}
     ================================
-        `)
-    })
+        `);
+  });
 }
 
 startServer().catch((err) => {
-    console.error("❌ Failed to start server:", err)
-    process.exit(1)
-})
+  console.error("❌ Failed to start server:", err);
+  process.exit(1);
+});
 
 export default app;

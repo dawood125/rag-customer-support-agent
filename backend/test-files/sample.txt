@@ -1,0 +1,26 @@
+NeuralDesk - AI Customer Support Platform
+
+What is NeuralDesk?
+NeuralDesk is an AI-powered customer support SaaS platform that uses RAG (Retrieval Augmented Generation) to answer customer questions based on a company's knowledge base.
+
+Key Features:
+1. Multi-tenant architecture - Each company has isolated data
+2. RAG pipeline - AI answers from YOUR documents, not generic internet
+3. WhatsApp integration - Reply to customers on their favorite channel
+4. Real-time chat - Instant responses with live typing indicators
+5. Document upload - Support for PDF, Word, and text files
+
+How does RAG work?
+RAG stands for Retrieval Augmented Generation. When a customer asks a question:
+- The system searches the company's uploaded documents for relevant information
+- The most relevant chunks are passed to the AI
+- The AI generates a contextual answer based on those chunks
+- This ensures answers are accurate and based on real company data
+
+Pricing Plans:
+- Free: 1 document, 100 messages per month
+- Basic: 10 documents, 1000 messages per month
+- Premium: Unlimited documents and messages
+
+Contact:
+For support, email us at support@neuraldesk.com or visit our website at www.neuraldesk.com.
